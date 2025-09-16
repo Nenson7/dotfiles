@@ -94,9 +94,27 @@ require("lazy").setup({
                     { name = "buffer" },
                     { name = "path" },
                 }),
+                window = {
+                    completion = cmp.config.window.bordered({
+                        border = "single",
+                    }),
+                    documentation = cmp.config.window.bordered({
+                        border = "single",
+                    })
+                },
+                completion = {
+                    completeopt = "menu,menuone,noselect",
+                    max_item_count = 10,
+                },
+                formatting = {
+                    side_padding = 0,  -- increase/decrease horizontal padding
+                    col_offset = 1,    -- offset text from border
+                },
             })
         end,
     },
+
+    { 'windwp/nvim-autopairs' , event = "InsertEnter", config = true },
 
     {
         "williamboman/mason-lspconfig.nvim",
