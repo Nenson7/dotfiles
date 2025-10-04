@@ -20,7 +20,7 @@ zinit wait lucid for \
     hlissner/zsh-autopair \
     zsh-users/zsh-completions \
     zsh-users/zsh-autosuggestions \
-    zsh-users/fast-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-history-substring-search \
     wfxr/forgit \
     rupa/z
