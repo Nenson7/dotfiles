@@ -17,23 +17,21 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-
     {
-        "rose-pine/neovim",
-        name = "rose-pine",
+        "ellisonleao/gruvbox.nvim",
         priority = 1000,
         config = function()
-            require("rose-pine").setup({
-                styles = {
-                    bold = true,
-                    italic = false,
-                    transparency = true,
-                }
-            })
-            vim.cmd.colorscheme("rose-pine")
+            require("gruvbox").setup({
+                    italic = {
+                        strings = false,
+                        comments = false,
+                    },
+                    contrast = "hard",
+                })
+                vim.o.background = "dark"
+                vim.cmd.colorscheme("gruvbox")
         end
     },
-
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -41,12 +39,24 @@ require("lazy").setup({
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "c", "lua", "vim", "vimdoc" },
                 auto_install = true,
-                highlight = { enable = true },
-                additional_vim_regex_highlighting = false,
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
             })
         end
     },
-
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = function ()
+            require("lualine").setup({
+                options = {
+                    theme = "gruvbox",
+                }
+            })
+        end
+    },
     {
         "nvim-telescope/telescope.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -91,7 +101,7 @@ require("lazy").setup({
                 }),
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
-                    { name = "buffer" },
+                    { name = "buffer", max_item_count = 10 },
                     { name = "path" },
                 }),
                 window = {
@@ -104,10 +114,9 @@ require("lazy").setup({
                 },
                 completion = {
                     completeopt = "menu,menuone,noselect",
-                    max_item_count = 10,
                 },
                 formatting = {
-                    side_padding = 0,  -- increase/decrease horizontal padding
+                    side_padding = 1,  -- increase/decrease horizontal padding
                     col_offset = 1,    -- offset text from border
                 },
             })
@@ -155,19 +164,6 @@ require("lazy").setup({
 
 })
 
--- Define custom diagnostic signs
-local signs = {
-    Error = "",
-    Warn  = "",
-    Info  = "",
-    Hint  = "",
-}
-
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
-
 -- Optional: Configure diagnostics display
 vim.diagnostic.config({
     virtual_text = {
@@ -178,3 +174,4 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
 })
+

@@ -16,6 +16,7 @@ o.incsearch = true
 
 o.termguicolors = true
 o.scrolloff = 8
+o.mouse = ""
 
 o.clipboard = "unnamedplus"
 

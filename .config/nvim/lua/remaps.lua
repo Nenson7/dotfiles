@@ -13,4 +13,3 @@ map("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
 
 
 map("i", "jk", "<Esc>", opts)
-
