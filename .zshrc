@@ -6,6 +6,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 ZSH_CONFIG="$HOME/.config/zsh"
-for file in $ZSH_CONFIG/{*}.zsh; do
-    [[ -f $file]] && source "$file"
+for file in $ZSH_CONFIG/*.zsh; do
+    [[ -f $file ]] && source "$file"
 done
