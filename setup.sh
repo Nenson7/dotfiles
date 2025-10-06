@@ -7,7 +7,8 @@ sudo apt update && sudo apt upgrade -y
 
 echo "INFO: Installing essentials"
 sudo apt install -y git build-essential vim curl wget\
-    gnome-tweaks tlp tlp-rdw python3 python3-pip ripgrep fd-find zsh btop fzf
+    gnome-tweaks tlp tlp-rdw python3 python3-pip ripgrep fd-find zsh btop fzf \
+    ubuntu-restricted-extras vlc
 
 echo "INFO: Copying Config"
 if [ -d "$HOME/dotfiles/.git" ]; then

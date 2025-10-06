@@ -59,12 +59,42 @@ require("lazy").setup({
     },
     {
         "nvim-telescope/telescope.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-fzf-native.nvim" },
+        build = "make",
         config = function()
+            local telescope = require("telescope")
             local builtin = require("telescope.builtin")
             local map = vim.keymap.set
-            map("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
-            map("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
+
+            telescope.setup{
+                defaults = {
+                    prompt_prefix = "❯ ",
+                    selection_caret = "➤ ",
+                    sorting_strategy = "ascending",
+                    layout_config = { prompt_position = "top" },
+                    file_ignore_patterns = { "node_modules", ".git/" },
+                    path_display = { "truncate" },
+                },
+                extensions = {
+                    fzf = {
+                        fuzzy = true,                    -- enable fuzzy search
+                        override_generic_sorter = true,  -- override default sorter
+                        override_file_sorter = true,     -- override file sorter
+                        case_mode = "smart_case",        -- smart case sensitivity
+                    }
+                }
+            }
+
+            telescope.load_extension("fzf")
+
+            map("n", "<leader>ff", function ()
+                builtin.find_files({hidden = true})
+            end, { desc = "Find files" , silent = true})
+
+            map("n", "<leader>fg", function ()
+                builtin.live_grep()
+            end , { desc = "Live grep", silent = true})
+
             map("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
             map("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
         end
@@ -161,7 +191,46 @@ require("lazy").setup({
             })
         end,
     },
+    {
+        "lewis6991/gitsigns.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("gitsigns").setup({
+                signs = {
+                    add          = { text = '+' },
+                    change       = { text = '~' },
+                    delete       = { text = '_' },
+                    topdelete    = { text = '‾' },
+                    changedelete = { text = '~' },
+                },
+                on_attach = function(bufnr)
+                    local gs = package.loaded.gitsigns
+                    local map = vim.keymap.set
 
+                    -- Navigation
+                    map('n', ']c', gs.next_hunk, { buffer = bufnr, desc = "Next Git hunk" })
+                    map('n', '[c', gs.prev_hunk, { buffer = bufnr, desc = "Previous Git hunk" })
+
+                    -- Actions
+                    map('n', '<leader>hs', gs.stage_hunk, { buffer = bufnr, desc = "Stage hunk" })
+                    map('n', '<leader>hr', gs.reset_hunk, { buffer = bufnr, desc = "Reset hunk" })
+                    map('v', '<leader>hs', function() gs.stage_hunk({vim.fn.line('.'), vim.fn.line('v')}) end, { buffer = bufnr, desc = "Stage selection" })
+                    map('v', '<leader>hr', function() gs.reset_hunk({vim.fn.line('.'), vim.fn.line('v')}) end, { buffer = bufnr, desc = "Reset selection" })
+                    map('n', '<leader>hS', gs.stage_buffer, { buffer = bufnr, desc = "Stage buffer" })
+                    map('n', '<leader>hu', gs.undo_stage_hunk, { buffer = bufnr, desc = "Undo stage hunk" })
+                    map('n', '<leader>hp', gs.preview_hunk, { buffer = bufnr, desc = "Preview hunk" })
+                    map('n', '<leader>hb', gs.blame_line, { buffer = bufnr, desc = "Blame line" })
+                end,
+            })
+        end
+    },
+    {
+        "kdheepak/lazygit.nvim",
+        cmd = "LazyGit",  -- lazy-load only when you run :LazyGit
+        config = function()
+            vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
+        end
+    },
 })
 
 -- Optional: Configure diagnostics display
