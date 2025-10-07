@@ -18,19 +18,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
-        "ellisonleao/gruvbox.nvim",
+        "Yazeed1s/minimal.nvim",
         priority = 1000,
-        config = function()
-            require("gruvbox").setup({
-                    italic = {
-                        strings = false,
-                        comments = false,
-                    },
-                    contrast = "hard",
-                })
-                vim.o.background = "dark"
-                vim.cmd.colorscheme("gruvbox")
-        end
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -50,11 +39,7 @@ require("lazy").setup({
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function ()
-            require("lualine").setup({
-                options = {
-                    theme = "gruvbox",
-                }
-            })
+            require("lualine").setup()
         end
     },
     {
@@ -185,6 +170,14 @@ require("lazy").setup({
                         lspconfig[server_name].setup({
                             on_attach = on_attach,
                             capabilities = capabilities,
+                            settings = server_name == "lua_ls" and {
+                                Lua = {
+                                    diagnostics = { globals = { "vim" } },
+                                    telemetry = { enable = false },
+                                    runtime = { version = "LuaJIT" },
+                                    workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                                } or nil,
+                            }
                         })
                     end,
                 },
@@ -244,3 +237,4 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
+vim.cmd.colorscheme("minimal")

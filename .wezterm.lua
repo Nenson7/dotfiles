@@ -2,9 +2,9 @@ local wezterm = require 'wezterm'
 
 return {
     color_scheme = 'Gruvbox dark, hard (base16)',
-    font_size = 20,
-    font = wezterm.font("FiraCode", { weight = "Medium"}),
-    line_height = 1.05,
+    font_size = 24,
+    font = wezterm.font("JetBrains Mono"),
+    cell_width = 1.0,
     enable_tab_bar = false,
     default_cursor_style = "SteadyBar",
     use_fancy_tab_bar = false,
