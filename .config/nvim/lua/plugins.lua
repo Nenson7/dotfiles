@@ -18,8 +18,18 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
-        "Yazeed1s/minimal.nvim",
+        "rose-pine/neovim",
+        name = "rose-pine",
         priority = 1000,
+        config = function ()
+            require("rose-pine").setup({
+                styles = {
+                    italic = false,
+                    transparency = true,
+                },
+            })
+            vim.cmd.colorscheme("rose-pine")
+        end
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -236,5 +246,3 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
 })
-
-vim.cmd.colorscheme("minimal")
