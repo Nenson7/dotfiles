@@ -3,7 +3,7 @@ local wezterm = require 'wezterm'
 return {
     font_size = 22,
     font = wezterm.font("JetBrains Mono"),
-    window_background_opacity = 0.95,
+    window_background_opacity = 0.9,
     cell_width = 1.0,
     enable_tab_bar = false,
     default_cursor_style = "SteadyBar",
