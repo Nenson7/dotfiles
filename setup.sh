@@ -3,7 +3,7 @@
 set -e
 
 echo "INFO: Updating System Packages"
-sudo apt update && sudo apt upgrade -y
+sudo  update && sudo apt upgrade -y
 
 echo "INFO: Installing essentials"
 sudo apt install -y git build-essential vim curl wget\
