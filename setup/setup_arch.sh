@@ -8,19 +8,19 @@ echo "==> Installing essential packages"
 sudo pacman -S --noconfirm \
     git base-devel vim curl wget \
     python python-pip ripgrep fd zsh btop fzf \
-    vlc tlp gnome-tweaks wezterm
+    vlc tlp wezterm
 
 # # Optional codecs (equivalent to ubuntu-restricted-extras)
 # sudo pacman -S --noconfirm gst-libav gst-plugins-ugly gst-plugins-good gst-plugins-bad
 
-echo "==> Copying dotfiles"
-if [ -d "$HOME/dotfiles/.git" ]; then
-    cd "$HOME/dotfiles"
-    git fetch origin
-    git reset --hard origin/main
-else
-    git clone https://github.com/Nenson7/dotfiles "$HOME/dotfiles"
-fi
+# echo "==> Copying dotfiles"
+# if [ -d "$HOME/dotfiles/.git" ]; then
+#     cd "$HOME/dotfiles"
+#     git fetch origin
+#     git reset --hard origin/main
+# else
+#     git clone https://github.com/Nenson7/dotfiles "$HOME/dotfiles"
+# fi
 cd ~/dotfiles && ./install.sh
 cd ~
 

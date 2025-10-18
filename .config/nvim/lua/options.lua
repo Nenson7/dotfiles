@@ -5,6 +5,7 @@ o.number = true
 o.relativenumber = true
 
 o.tabstop = 4
+o.softtabstop = 4
 o.shiftwidth = 4
 o.expandtab = true
 o.smartindent = true
@@ -20,14 +21,14 @@ o.mouse = ""
 
 o.clipboard = "unnamedplus"
 
+o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 o.undofile = true
 o.swapfile = false
 o.backup = false
 
-o.timeoutlen = 300
-o.updatetime = 300
+o.updatetime = 50
+o.colorcolumn = "100"
+o.signcolumn = "yes"
 
 o.wrap = false
 vim.g.mapleader = " "
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1

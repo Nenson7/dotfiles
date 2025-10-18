@@ -4,7 +4,7 @@ TARGET=~
 
 cd "$DOTFILES" || exit
 
-find . -type f ! -name "install.sh" ! -name "setup.sh" ! -name "README.md" ! -path "./.git/*" | \
+find . ! -path "./setup/*" ! -path "./.git/*" | \
 	while read -r file; do
 
 	src="$DOTFILES/${file#./}"

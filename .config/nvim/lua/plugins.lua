@@ -97,7 +97,11 @@ require("lazy").setup({
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
     config = function()
-      require("mason").setup()
+      require("mason").setup({
+        ui = {
+          border = "single",
+        }
+      })
     end
   },
 
@@ -137,8 +141,13 @@ require("lazy").setup({
           vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
           vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "References" }))
           vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Line Diagnostics" }))
-          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous Diagnostic" }))
-          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next Diagnostic" }))
+            vim.keymap.set("n", "[d", function()
+              vim.diagnostic.jump({ count = -1, float = true })
+            end, vim.tbl_extend("force", opts, { desc = "Previous Diagnostic" }))
+
+            vim.keymap.set("n", "]d", function()
+              vim.diagnostic.jump({ count = 1, float = true })
+            end, vim.tbl_extend("force", opts, { desc = "Next Diagnostic" }))
         end,
       })
 
@@ -171,6 +180,71 @@ require("lazy").setup({
       vim.lsp.enable("clangd")
     end
   },
+  -- Debugging (DAP + inline runtime values using LLDB)
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",           -- JetBrains-style UI (stack, vars, breakpoints)
+      "theHamsta/nvim-dap-virtual-text", -- inline values beside code,
+      "nvim-neotest/nvim-nio"
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+
+      -- Inline variable values beside code
+      require("nvim-dap-virtual-text").setup({
+        commented = true, -- shows like: int x = 5; // x = 5
+      })
+
+      -- DAP UI setup (optional but really useful)
+      dapui.setup()
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+
+      dap.adapters.lldb = {
+        type = "executable",
+        command = "lldb-dap", -- installed with lldb package
+        name = "lldb",
+      }
+
+      dap.configurations.cpp = {
+        {
+          name = "Launch with LLDB",
+          type = "lldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        args = function ()
+          local input = vim.fn.input("Program Arguments: ")
+          return vim.fn.split(input, " ")
+        end
+        },
+      }
+
+      dap.configurations.c = dap.configurations.cpp
+
+      local map = vim.keymap.set
+      map("n", "<F5>", function() dap.continue() end, { desc = "Start / Continue Debugging" })
+      map("n", "<F10>", function() dap.step_over() end, { desc = "Step Over" })
+      map("n", "<F11>", function() dap.step_into() end, { desc = "Step Into" })
+      map("n", "<F12>", function() dap.step_out() end, { desc = "Step Out" })
+      map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
+      map("n", "<leader>du", function() dapui.toggle() end, { desc = "Toggle DAP UI" })
+    end,
+  },
+
 
   -- Completion
   {
@@ -277,180 +351,6 @@ require("lazy").setup({
       })
     end
   },
-
-  -- Neo-tree
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
-    keys = {
-      { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
-      { "<leader>o", "<cmd>Neotree focus<cr>", desc = "Focus Neo-tree" },
-    },
-    config = function()
-      require("neo-tree").setup({
-        close_if_last_window = true,
-        popup_border_style = "rounded",
-        enable_git_status = true,
-        enable_diagnostics = true,
-        default_component_configs = {
-          container = {
-            enable_character_fade = true
-          },
-          indent = {
-            indent_size = 2,
-            padding = 1,
-            with_markers = true,
-            indent_marker = "│",
-            last_indent_marker = "└",
-            highlight = "NeoTreeIndentMarker",
-          },
-          icon = {
-            folder_closed = "",
-            folder_open = "",
-            folder_empty = "",
-            default = "",
-          },
-          modified = {
-            symbol = "[+]",
-            highlight = "NeoTreeModified",
-          },
-          name = {
-            trailing_slash = false,
-            use_git_status_colors = true,
-            highlight = "NeoTreeFileName",
-          },
-          git_status = {
-            symbols = {
-              added     = "✚",
-              modified  = "",
-              deleted   = "✖",
-              renamed   = "󰁕",
-              untracked = "",
-              ignored   = "",
-              unstaged  = "󰄱",
-              staged    = "",
-              conflict  = "",
-            }
-          },
-        },
-        window = {
-          position = "left",
-          width = "100%",
-          mapping_options = {
-            noremap = true,
-            nowait = true,
-          },
-          mappings = {
-            ["<space>"] = {
-              "toggle_node",
-              nowait = false,
-            },
-            ["<cr>"] = "open",
-            ["<esc>"] = "cancel",
-            ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
-            ["l"] = "focus_preview",
-            ["s"] = "open_split",
-            ["v"] = "open_vsplit",
-            ["t"] = "open_tabnew",
-            ["C"] = "close_node",
-            ["z"] = "close_all_nodes",
-            ["a"] = {
-              "add",
-              config = {
-                show_path = "none"
-              }
-            },
-            ["A"] = "add_directory",
-            ["d"] = "delete",
-            ["r"] = "rename",
-            ["y"] = "copy_to_clipboard",
-            ["x"] = "cut_to_clipboard",
-            ["p"] = "paste_from_clipboard",
-            ["c"] = "copy",
-            ["m"] = "move",
-            ["q"] = "close_window",
-            ["R"] = "refresh",
-            ["?"] = "show_help",
-            ["<"] = "prev_source",
-            [">"] = "next_source",
-            ["i"] = "show_file_details",
-          }
-        },
-        filesystem = {
-          filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
-            hide_gitignored = false,
-            hide_hidden = true,
-            hide_by_name = {
-              "node_modules"
-            },
-            never_show = {
-              ".DS_Store",
-              "thumbs.db"
-            },
-          },
-          follow_current_file = {
-            enabled = true,
-            leave_dirs_open = false,
-          },
-          group_empty_dirs = false,
-          hijack_netrw_behavior = "open_default",
-          use_libuv_file_watcher = true,
-          window = {
-            mappings = {
-              ["<bs>"] = "navigate_up",
-              ["."] = "set_root",
-              ["H"] = "toggle_hidden",
-              ["/"] = "fuzzy_finder",
-              ["D"] = "fuzzy_finder_directory",
-              ["#"] = "fuzzy_sorter",
-              ["f"] = "filter_on_submit",
-              ["<c-x>"] = "clear_filter",
-              ["[g"] = "prev_git_modified",
-              ["]g"] = "next_git_modified",
-              ["o"] = { "show_help", nowait=false, config = { title = "Order by", prefix_key = "o" }},
-              ["oc"] = { "order_by_created", nowait = false },
-              ["od"] = { "order_by_diagnostics", nowait = false },
-              ["og"] = { "order_by_git_status", nowait = false },
-              ["om"] = { "order_by_modified", nowait = false },
-              ["on"] = { "order_by_name", nowait = false },
-              ["os"] = { "order_by_size", nowait = false },
-              ["ot"] = { "order_by_type", nowait = false },
-            },
-          },
-        },
-        buffers = {
-          follow_current_file = {
-            enabled = true,
-            leave_dirs_open = false,
-          },
-          group_empty_dirs = true,
-          show_unloaded = true,
-        },
-        git_status = {
-          window = {
-            position = "float",
-            mappings = {
-              ["A"]  = "git_add_all",
-              ["gu"] = "git_unstage_file",
-              ["ga"] = "git_add_file",
-              ["gr"] = "git_revert_file",
-              ["gc"] = "git_commit",
-              ["gp"] = "git_push",
-              ["gg"] = "git_commit_and_push",
-            }
-          }
-        },
-      })
-    end
-  },
-
   -- Git signs
   {
     "lewis6991/gitsigns.nvim",
@@ -466,7 +366,6 @@ require("lazy").setup({
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
           local map = vim.keymap.set
-          
           map('n', ']c', gs.next_hunk, { buffer = bufnr, desc = "Next Git hunk" })
           map('n', '[c', gs.prev_hunk, { buffer = bufnr, desc = "Previous Git hunk" })
           map('n', '<leader>hs', gs.stage_hunk, { buffer = bufnr, desc = "Stage hunk" })
@@ -491,7 +390,12 @@ require("lazy").setup({
       { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Open LazyGit" }
     },
   },
-})
+},
+  {
+    ui = {
+      border = "single",
+    }
+  })
 
 -- Diagnostics
 vim.diagnostic.config({
@@ -506,12 +410,4 @@ vim.diagnostic.config({
   },
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function(data)
-    local directory = vim.fn.isdirectory(data.file) == 1
-    if directory then
-      vim.cmd.cd(data.file)
-      require("neo-tree.command").execute({ toggle = true })
-    end
-  end,
-})
+-- vim.lsp.inlay_hint.enable(true)
