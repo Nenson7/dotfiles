@@ -1,6 +1,3 @@
-
-bindkey -v  # vim mode
-
 # History
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
@@ -13,6 +10,9 @@ setopt HIST_VERIFY
 setopt SHARE_HISTORY
 setopt AUTO_CD
 setopt INTERACTIVE_COMMENTS
+
+autoload -Uz compinit
+compinit -C
 
 # PATH
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"

@@ -1,8 +1,9 @@
 -- Remaps
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+vim.g.mapleader = " "
 
-map("n", "<leader>e", "<cmd>Ex<CR>", opts)
+-- map("n", "<leader>e", "<cmd>Ex<CR>", opts)
 
 map("n", "<leader>h", ":nohlsearch<CR>", opts)
 

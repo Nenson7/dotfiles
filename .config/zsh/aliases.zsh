@@ -1,10 +1,13 @@
 alias n='nvim'
-alias ls='ls --color=auto -lh'
-alias la='ls -la'
+alias ls='ls --color=always -lh'
 alias grep='grep --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias c='clear'
+
+export EDITOR=nvim
+export VISUAL=nvim
+export PATH="$PATH:/home/_nenson/.local/share/gem/ruby/3.4.0/bin"
 
 build() {
     if [[ -f "./build.sh" ]]; then
@@ -17,3 +20,12 @@ build() {
         echo "no build config found"
     fi
 }
+
+# fast fd+fzf directory jump (Ctrl+G)
+fzf_fd_cd() {
+  local dir
+  dir=$(fd --type d --follow --exclude .git . 2>/dev/null | fzf --height 40% --reverse ) || return
+  cd -- "$dir" && zle reset-prompt 2>/dev/null
+}
+zle -N fzf_fd_cd
+bindkey '^G' fzf_fd_cd

@@ -27,7 +27,7 @@ o.swapfile = false
 o.backup = false
 
 o.updatetime = 50
-o.colorcolumn = "100"
+o.colorcolumn = "80"
 o.signcolumn = "yes"
 
 o.wrap = false

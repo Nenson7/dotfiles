@@ -18,7 +18,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  -- Colorscheme
   {
     "rose-pine/neovim",
     name = "rose-pine",
@@ -28,8 +27,6 @@ require("lazy").setup({
       vim.cmd.colorscheme("rose-pine")
     end
   },
-
-  -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -180,71 +177,6 @@ require("lazy").setup({
       vim.lsp.enable("clangd")
     end
   },
-  -- Debugging (DAP + inline runtime values using LLDB)
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "rcarriga/nvim-dap-ui",           -- JetBrains-style UI (stack, vars, breakpoints)
-      "theHamsta/nvim-dap-virtual-text", -- inline values beside code,
-      "nvim-neotest/nvim-nio"
-    },
-    config = function()
-      local dap = require("dap")
-      local dapui = require("dapui")
-
-      -- Inline variable values beside code
-      require("nvim-dap-virtual-text").setup({
-        commented = true, -- shows like: int x = 5; // x = 5
-      })
-
-      -- DAP UI setup (optional but really useful)
-      dapui.setup()
-
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-      end
-
-      dap.adapters.lldb = {
-        type = "executable",
-        command = "lldb-dap", -- installed with lldb package
-        name = "lldb",
-      }
-
-      dap.configurations.cpp = {
-        {
-          name = "Launch with LLDB",
-          type = "lldb",
-          request = "launch",
-          program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-          end,
-          cwd = "${workspaceFolder}",
-          stopOnEntry = false,
-        args = function ()
-          local input = vim.fn.input("Program Arguments: ")
-          return vim.fn.split(input, " ")
-        end
-        },
-      }
-
-      dap.configurations.c = dap.configurations.cpp
-
-      local map = vim.keymap.set
-      map("n", "<F5>", function() dap.continue() end, { desc = "Start / Continue Debugging" })
-      map("n", "<F10>", function() dap.step_over() end, { desc = "Step Over" })
-      map("n", "<F11>", function() dap.step_into() end, { desc = "Step Into" })
-      map("n", "<F12>", function() dap.step_out() end, { desc = "Step Out" })
-      map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
-      map("n", "<leader>du", function() dapui.toggle() end, { desc = "Toggle DAP UI" })
-    end,
-  },
-
 
   -- Completion
   {
@@ -351,6 +283,7 @@ require("lazy").setup({
       })
     end
   },
+
   -- Git signs
   {
     "lewis6991/gitsigns.nvim",
@@ -380,16 +313,6 @@ require("lazy").setup({
       })
     end
   },
-
-  -- Lazygit
-  {
-    "kdheepak/lazygit.nvim",
-    cmd = "LazyGit",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "Open LazyGit" }
-    },
-  },
 },
   {
     ui = {
@@ -398,16 +321,14 @@ require("lazy").setup({
   })
 
 -- Diagnostics
-vim.diagnostic.config({
-  virtual_text = { prefix = '●' },
-  signs = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-  float = {
-    border = "single",
-    source = "if_many",
-  },
-})
-
--- vim.lsp.inlay_hint.enable(true)
+-- vim.diagnostic.config({
+--   virtual_text = { prefix = '●' },
+--   signs = true,
+--   underline = true,
+--   update_in_insert = false,
+--   severity_sort = true,
+--   float = {
+--     border = "single",
+--     source = "if_many",
+--   },
+-- })
