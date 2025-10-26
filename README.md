@@ -4,4 +4,6 @@
 - zsh
 - tmux
 - wezterm
+- kitty
+- hyprland, waybar and wofi and hyprpaper
 - small installer sccript
