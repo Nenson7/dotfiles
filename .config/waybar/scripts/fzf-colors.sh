@@ -7,7 +7,7 @@
 # License: MIT
 
 main() {
-	local file=$XDG_CONFIG_HOME/waybar/theme.css
+	local file=$HOME/.config/waybar/theme.css
 	local theme
 	theme=$(head -n 1 "$file" | awk '{print $2}')
 	local rosewater mauve red lavender text overlay0 surface1 surface0 base
