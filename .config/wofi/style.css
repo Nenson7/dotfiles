@@ -1,0 +1,87 @@
+/* Minimal Monochrome Wofi Theme */
+
+/* Colors */
+@define-color white      #ffffff;
+@define-color light-gray #cfcfcf;
+@define-color gray       #8a8a8a;
+@define-color dark-gray  #222222;
+@define-color black      #101010;
+
+/* General font */
+* {
+  font-family: 'JetBrainsMono Nerd Font', monospace;
+  font-size: 30px;
+  color: @white;
+}
+
+/* Window */
+window {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid @gray;
+  border-radius: 0.1em;
+  background-color: @black;
+  animation: slideIn 0.3s ease-in-out both;
+}
+
+/* Slide In Animation */
+@keyframes slideIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Inner Box */
+#inner-box {
+  margin: 5px;
+  padding: 10px;
+  background-color: @black;
+}
+
+/* Outer Box */
+#outer-box {
+  margin: 5px;
+  padding: 10px;
+  background-color: @black;
+}
+
+/* Scroll */
+#scroll {
+  margin: 0;
+  padding: 10px;
+  background-color: @black;
+}
+
+/* Input */
+#input {
+  margin: 5px 20px;
+  padding: 10px;
+  border-radius: 0.1em;
+  color: @white;
+  background-color: @dark-gray;
+}
+
+/* Text */
+#text {
+  margin: 5px;
+  color: @white;
+}
+
+/* Entries */
+#entry {
+  background-color: @dark-gray;
+  border: none;
+}
+
+/* Selected Entry */
+#entry:selected {
+  border: 0.11em solid @light-gray;
+}
+
+#entry:selected #text {
+  color: @light-gray;
+}
+
+/* Active/Drop */
+#entry:drop(active) {
+  background-color: @gray !important;
+}

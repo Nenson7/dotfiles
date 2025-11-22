@@ -27,8 +27,7 @@ o.swapfile = false
 o.backup = false
 
 o.updatetime = 50
-o.colorcolumn = "80"
-o.signcolumn = "yes"
+-- o.signcolumn = "yes"
 
 o.wrap = false
 vim.g.mapleader = " "

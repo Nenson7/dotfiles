@@ -10,39 +10,25 @@
 	volume
 ------------*/
 
-#custom-left_div.6 {
-	color: @volume;
-}
 #pulseaudio,
 #wireplumber {
-	background-color: @volume;
+	background-color: @workspaces;
 }
 
 /*----------------
 	brightness
 ----------------*/
 
-#custom-left_div.7 {
-	background-color: @volume;
-	color: @backlight;
-}
 #backlight {
-	background-color: @backlight;
+	background-color: @workspaces;
 }
 
 /*-------------
 	battery
 -------------*/
 
-#custom-left_div.8 {
-	background-color: @backlight;
-	color: @battery;
-}
 #battery {
-	background-color: @battery;
-}
-#custom-left_inv.2 {
-	color: @battery;
+	background-color: @workspaces;
 }
 
 /*----------------

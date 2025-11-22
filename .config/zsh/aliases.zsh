@@ -7,7 +7,7 @@ alias c='clear'
 
 export EDITOR=nvim
 export VISUAL=nvim
-export PATH="$PATH:/home/_nenson/.local/share/gem/ruby/3.4.0/bin"
+export PATH="$PATH:/home/_nenson/go/bin"
 
 build() {
     if [[ -f "./build.sh" ]]; then

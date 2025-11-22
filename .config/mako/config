@@ -1,9 +1,29 @@
-# Colors
+# ==============================
+# Mako Notification Config
+# ==============================
 
-background-color=#1e1e2e
-text-color=#cdd6f4
-border-color=#a6e3a1
-progress-color=over #313244
+# Font
+font=JetBrainsMono Nerd Font 12
 
-[urgency=high]
-border-color=#fab387
+# General appearance
+background-color=#111111
+text-color=#ffffff
+border-color=#555555
+border-radius=4
+padding=10
+margin=10
+width=400
+
+# Progress bar
+progress-color=#555555
+
+# Urgency overrides
+[urgency=low]
+border-color=#444444
+
+[urgency=normal]
+border-color=#555555
+
+[urgency=critical]
+border-color=#888888
+text-color=#ff5555
