@@ -4,6 +4,7 @@ local options = {
     css = { "prettier" },
     html = { "prettier" },
     js = { "prettier" },
+    go = { "goimports" }
   },
 
   -- format_on_save = {

@@ -5,7 +5,6 @@ return {
     opts = require "configs.conform",
   },
 
-  -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -33,4 +32,14 @@ return {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
     },
   },
+
+  {
+    "lewis6991/gitsigns.nvim",
+    lazy = true,
+    config = function()
+      require("gitsigns").setup({
+        numhl = true
+      })
+    end
+  }
 }
